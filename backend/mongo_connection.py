@@ -8,10 +8,13 @@ from dotenv import load_dotenv
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 
-# Load environment variables
+# Load environment variables from backend/.env so we can read Mongo URL & DB name
 load_dotenv()
 
+# Main Flask application that exposes all backend REST endpoints
 app = Flask(__name__)
+
+# Allow the React frontend to call any /api/* route (CORS = cross‑origin requests)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config['JSON_SORT_KEYS'] = False
 
@@ -132,7 +135,7 @@ def list_feedback():
         if user:
             query['username'] = user
 
-        cursor = db.model_feedback.find(query)
+        cursor = db.platform_feedback.find(query).sort('created_at', -1)  # Sort by newest first
         results = []
         for r in cursor:
             r['_id'] = str(r.get('_id'))
@@ -378,6 +381,29 @@ def get_classifications():
             if isinstance(r.get('created_at'), datetime):
                 r['created_at'] = r['created_at'].isoformat()
             results.append(r)
+
+        return jsonify(results), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/approved-users', methods=['GET'])
+def get_approved_users():
+    """Get all approved users (admin only)."""
+    try:
+        db = get_db()
+        if db is None:
+            return jsonify({'error': 'Database connection failed'}), 500
+
+        cursor = db.approved_users.find({'role': {'$ne': 'admin'}}).sort('createdAt', -1)
+        results = []
+        for user in cursor:
+            user['_id'] = str(user.get('_id'))
+            if isinstance(user.get('createdAt'), datetime):
+                user['createdAt'] = user['createdAt'].isoformat()
+            if isinstance(user.get('approvedAt'), datetime):
+                user['approvedAt'] = user['approvedAt'].isoformat()
+            results.append(user)
 
         return jsonify(results), 200
     except Exception as e:

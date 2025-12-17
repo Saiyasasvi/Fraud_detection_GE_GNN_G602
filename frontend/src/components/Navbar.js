@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from './ui/button';
-import { Shield, LayoutDashboard, MessageSquare, LogOut, User } from 'lucide-react';
+import { Shield, LayoutDashboard, MessageSquare, LogOut, User, Settings } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -60,6 +60,20 @@ const Navbar = () => {
                   Feedback
                 </Button>
               </Link>
+              
+              {user?.role === 'admin' && (
+                <Link to="/admin">
+                  <Button
+                    variant="ghost"
+                    className={`text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-200 ${
+                      isActive('/admin') ? 'bg-slate-800 text-white' : ''
+                    }`}
+                  >
+                    <Settings className="w-4 h-4 mr-2" />
+                    Admin
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
           

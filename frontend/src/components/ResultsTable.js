@@ -121,6 +121,7 @@ const ResultsTable = ({ results }) => {
                   <TableRow className="hover:bg-slate-800/50">
                     <TableHead className="text-slate-300 font-semibold">Reviewer ID</TableHead>
                     <TableHead className="text-slate-300 font-semibold">Reviewer Name</TableHead>
+                    <TableHead className="text-slate-300 font-semibold">Review Text</TableHead>
                     <TableHead className="text-slate-300 font-semibold text-center">Label</TableHead>
                     <TableHead className="text-slate-300 font-semibold text-center">Confidence</TableHead>
                   </TableRow>
@@ -137,6 +138,12 @@ const ResultsTable = ({ results }) => {
                         </TableCell>
                         <TableCell className="text-slate-300">
                           {result.reviewerName}
+                        </TableCell>
+                        <TableCell
+                          className="text-slate-300 max-w-md truncate"
+                          title={result.text || result.reviewText || ''}
+                        >
+                          {result.text || result.reviewText || ''}
                         </TableCell>
                         <TableCell className="text-center">
                           <Badge

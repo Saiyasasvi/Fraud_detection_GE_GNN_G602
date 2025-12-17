@@ -101,8 +101,14 @@ const Dashboard = () => {
       console.log('First 3 items:', predictions.slice(0, 3));
       console.log('==========================================');
       
-      // Use predictions directly from Colab response
-      setClassifiedResults(predictions);
+      // Normalize predictions so frontend can always use `text` for review content
+      const normalized = predictions.map(p => ({
+        ...p,
+        text: p.text || p.reviewText || ''
+      }));
+
+      // Use normalized predictions from Colab response
+      setClassifiedResults(normalized);
 
       // Save results to database
       try {

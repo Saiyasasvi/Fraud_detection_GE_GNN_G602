@@ -131,7 +131,11 @@ export const mockClassifyReviews = (reviews) => {
       text: review.text,
       label: isFraud ? 'Fraud' : 'Benign',
       confidence: Math.min(0.99, confidence),
-      timestamp: review.timestamp || new Date().toISOString()
+      timestamp: review.timestamp || new Date().toISOString(),
+
+      // ADD THESE FIELDS for the table:
+      reviewerId: review.userId || review.reviewerId || review.reviewerID || review.reviewer_id || '',
+      reviewerName: review.reviewerName || review.reviewer_name || `User ${review.userId || index + 1}`,
     };
   });
 };

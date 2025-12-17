@@ -107,6 +107,20 @@ const CSVUpload = ({ onUploadComplete }) => {
           }
         }
 
+        // Check for minimum row requirement
+        if (reviews.length < 100) {
+          clearInterval(progressInterval);
+          setUploading(false);
+          setUploadProgress(0);
+          handleRemoveFile();
+          toast({
+            title: 'Insufficient Data',
+            description: `The uploaded file contains only ${reviews.length} rows. Please upload a file with at least 100 rows of data for accurate analysis.`,
+            variant: 'destructive'
+          });
+          return;
+        }
+
         clearInterval(progressInterval);
         setUploadProgress(100);
 
